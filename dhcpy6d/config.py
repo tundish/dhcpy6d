@@ -32,7 +32,7 @@ import uuid
 try:
     import grp
     import pwd
-except ImportError:
+except (ImportError, ModuleNotFoundError):
     #  Not a Unix platform
     grp = None
     pwd = None
