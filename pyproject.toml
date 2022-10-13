@@ -33,7 +33,7 @@ dependencies = [
 download = "https://dhcpy6d.de/download"
 
 [project.scripts]
-dhcpy6d = "main:run"
+dhcpy6d = "dhcpy6d.main:run"
 
 [build-system]
 requires = [
