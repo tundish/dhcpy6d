@@ -1,0 +1,55 @@
+# For possible options see https://peps.python.org/pep-0621/
+ 
+[project]
+name = "dhcpy6d"
+version = "1.2.2"
+description="DHCPv6 server daemon"
+long_description="""
+    Dhcpy6d delivers IPv6 addresses for DHCPv6 clients, which can be identified by DUID,
+    hostname or MAC address as in the good old IPv4 days.
+    It allows easy dualstack transition, addresses may be generated randomly, by range,
+    by DNS, by arbitrary ID or MAC address.
+
+    Clients can get more than one address, leases and client configuration can be stored
+    in databases and DNS can be updated dynamically.
+    """
+readme = "README.md"
+requires-python = ">=3.8"
+license = {file = "LICENSE"}  # TODO:  Remove Nagstamon references.
+keywords = ["dhcp", "ipv6"]
+authors = [
+    {name = "Henri Wahl", email = "henri@dhcpy6d.de"}
+]
+classifiers = [
+    "Intended Audience :: System Administrators",
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: GNU General Public License (GPL)",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: POSIX",
+    "Natural Language :: English",
+    "Programming Language :: Python",
+    "Topic :: System :: Networking"
+]
+
+# End of project metadata
+
+dependencies = [
+    "distro",
+    "dnspython",
+]
+
+[project.scripts]
+dhcpy6d = "sbin/dhcpy6d:run"
+
+[build-system]
+requires = [
+    "setuptools",
+    "wheel"
+]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = [
+    "dhcpy6d",
+]
+
