@@ -28,7 +28,8 @@ try:
     from grp import getgrnam
     from os import chown
     from pwd import getpwnam
-except ImportError:
+except (ImportError, ModuleNotFoundError):
+    #  Not a Unix platform
     getgrnam = None
 
 from .config import cfg
