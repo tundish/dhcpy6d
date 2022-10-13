@@ -16,7 +16,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 
-from grp import getgrnam
+try:
+    from grp import getgrnam
+except ImportError:
+    getgrnam = None
+
 import logging
 from logging import (Formatter,
                      getLogger,
@@ -36,7 +40,8 @@ if cfg.LOG:
     formatter = Formatter('{asctime} {name} {levelname} {message}', style='{')
     log.setLevel(logging.__dict__[cfg.LOG_LEVEL])
     if cfg.LOG_FILE != '':
-        chown(cfg.LOG_FILE, getpwnam(cfg.USER).pw_uid, getgrnam(cfg.GROUP).gr_gid)
+        if getgrnam:
+            chown(cfg.LOG_FILE, getpwnam(cfg.USER).pw_uid, getgrnam(cfg.GROUP).gr_gid)
         log_handler = WatchedFileHandler(cfg.LOG_FILE)
         log_handler.setFormatter(formatter)
         log.addHandler(log_handler)
