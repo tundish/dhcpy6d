@@ -774,10 +774,10 @@ class Config:
                     error_exit(f"{msg_prefix} Logfile '{self.LOG_FILE}' does not exist.")
                 # check ownership of logfile
                 stat_result = os.stat(self.LOG_FILE)
-                if pwd and not stat_result.st_uid == pwd.getpwnam(self.USER).pw_uid:
-                    error_exit(f"{msg_prefix} User {self.USER} is not owner of logfile '{self.LOG_FILE}'.")
-                if grp and not stat_result.st_gid == grp.getgrnam(self.GROUP).gr_gid:
-                    error_exit(f"{msg_prefix} Group {self.GROUP} is not owner of logfile '{self.LOG_FILE}'.")
+                #if pwd and not stat_result.st_uid == pwd.getpwnam(self.USER).pw_uid:
+                #    error_exit(f"{msg_prefix} User {self.USER} is not owner of logfile '{self.LOG_FILE}'.")
+                #if grp and not stat_result.st_gid == grp.getgrnam(self.GROUP).gr_gid:
+                #    error_exit(f"{msg_prefix} Group {self.GROUP} is not owner of logfile '{self.LOG_FILE}'.")
 
             if self.LOG_LEVEL not in ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']:
                 error_exit(f"Log level '{self.LOG_LEVEL}' is invalid")

@@ -16,11 +16,17 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 
-import grp
 import os
-import pwd
 import sys
 import traceback
+
+try:
+    import grp
+    import pwd
+except ImportError:
+    #  Not a Unix platform
+    grp = None
+    pwd = None
 
 from ..config import cfg
 from .store import Store
@@ -55,7 +61,6 @@ class SQLite(Store):
             if storage_type == 'volatile':
                 storage = cfg.STORE_SQLITE_VOLATILE
                 # set ownership of storage file according to settings
-                os.chown(cfg.STORE_SQLITE_VOLATILE, pwd.getpwnam(cfg.USER).pw_uid, grp.getgrnam(cfg.GROUP).gr_gid)
             if storage_type == 'config':
                 storage = cfg.STORE_SQLITE_CONFIG
             self.connection = self.db_module.connect(storage, check_same_thread = False)
