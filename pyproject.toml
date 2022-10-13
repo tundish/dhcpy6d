@@ -39,7 +39,7 @@ dependencies = [
 ]
 
 [project.scripts]
-dhcpy6d = "sbin/dhcpy6d:run"
+dhcpy6d = "main:run"
 
 [build-system]
 requires = [
