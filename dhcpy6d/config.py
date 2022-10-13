@@ -19,7 +19,6 @@
 import configparser
 import copy
 import getopt
-import grp
 import os
 import os.path
 import platform
@@ -30,6 +29,12 @@ import stat
 import sys
 import time
 import uuid
+
+try:
+    import grp
+except ImportError:
+    # Not a Unix platform
+    grp = None
 
 from .helpers import (decompress_ip6,
                       error_exit,
@@ -769,7 +774,7 @@ class Config:
                 stat_result = os.stat(self.LOG_FILE)
                 if not stat_result.st_uid == pwd.getpwnam(self.USER).pw_uid:
                     error_exit(f"{msg_prefix} User {self.USER} is not owner of logfile '{self.LOG_FILE}'.")
-                if not stat_result.st_gid == grp.getgrnam(self.GROUP).gr_gid:
+                if grp and not stat_result.st_gid == grp.getgrnam(self.GROUP).gr_gid:
                     error_exit(f"{msg_prefix} Group {self.GROUP} is not owner of logfile '{self.LOG_FILE}'.")
 
             if self.LOG_LEVEL not in ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']:
