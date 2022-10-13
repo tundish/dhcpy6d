@@ -27,10 +27,16 @@ import sys
 if distro.id() == 'debian':
     sys.path[0:0] = ['/usr/share/pyshared']
 
-import grp
-import pwd
 import os
 import socket
+
+try:
+    import grp
+    import pwd
+except (ImportError, ModuleNotFoundError):
+    #  Not a Unix platform
+    grp = None
+    pwd = None
 
 from dhcpy6d import UDPMulticastIPv6
 from dhcpy6d.config import cfg
@@ -117,12 +123,13 @@ def run():
     dns_query_thread = DNSQueryThread()
     dns_query_thread.start()
 
-    # set user and group
-    log.info(f'Running as user {cfg.USER} (UID {pwd.getpwnam(cfg.USER).pw_uid}) and '
-             f'group {cfg.GROUP} (GID {grp.getgrnam(cfg.GROUP).gr_gid})')
-    # first set group because otherwise the freshly unprivileged user could not modify its groups itself
-    os.setgid(grp.getgrnam(cfg.GROUP).gr_gid)
-    os.setuid(pwd.getpwnam(cfg.USER).pw_uid)
+    if grp and pwd:
+        # set user and group
+        log.info(f'Running as user {cfg.USER} (UID {pwd.getpwnam(cfg.USER).pw_uid}) and '
+                 f'group {cfg.GROUP} (GID {grp.getgrnam(cfg.GROUP).gr_gid})')
+        # first set group because otherwise the freshly unprivileged user could not modify its groups itself
+        os.setgid(grp.getgrnam(cfg.GROUP).gr_gid)
+        os.setuid(pwd.getpwnam(cfg.USER).pw_uid)
 
     # log interfaces
     log.info(f'Listening on interfaces: {" ".join(IF_NAME)}')
