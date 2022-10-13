@@ -16,20 +16,20 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 
-try:
-    from grp import getgrnam
-except ImportError:
-    getgrnam = None
-
 import logging
 from logging import (Formatter,
                      getLogger,
                      StreamHandler)
 from logging.handlers import (SysLogHandler,
                               WatchedFileHandler)
-from os import chown
-from pwd import getpwnam
 from socket import gethostname
+
+try:
+    from grp import getgrnam
+    from os import chown
+    from pwd import getpwnam
+except ImportError:
+    getgrnam = None
 
 from .config import cfg
 
