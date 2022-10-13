@@ -45,5 +45,8 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools]
 packages = [
     "dhcpy6d",
+    "dhcpy6d.client",
+    "dhcpy6d.options",
+    "dhcpy6d.storage",
 ]
 
