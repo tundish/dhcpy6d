@@ -22,7 +22,6 @@ import getopt
 import os
 import os.path
 import platform
-import pwd
 import re
 import shlex
 import stat
@@ -32,9 +31,11 @@ import uuid
 
 try:
     import grp
+    import pwd
 except ImportError:
-    # Not a Unix platform
+    #  Not a Unix platform
     grp = None
+    pwd = None
 
 from .helpers import (decompress_ip6,
                       error_exit,
@@ -607,14 +608,15 @@ class Config:
             self.REALLY_DO_IT = BOOLPOOL[self.cli_really_do_it.lower()]
 
         # check user and group
-        try:
-            pwd.getpwnam(self.USER)
-        except:
-            error_exit(f"{msg_prefix} User '{self.USER}' does not exist")
-        try:
-            grp.getgrnam(self.GROUP)
-        except:
-            error_exit(f"{msg_prefix} Group '{self.GROUP}' does not exist")
+        if pwd and grp:
+            try:
+                pwd.getpwnam(self.USER)
+            except:
+                error_exit(f"{msg_prefix} User '{self.USER}' does not exist")
+            try:
+                grp.getgrnam(self.GROUP)
+            except:
+                error_exit(f"{msg_prefix} Group '{self.GROUP}' does not exist")
 
         # check interface
         if not self.IGNORE_INTERFACE:
@@ -772,7 +774,7 @@ class Config:
                     error_exit(f"{msg_prefix} Logfile '{self.LOG_FILE}' does not exist.")
                 # check ownership of logfile
                 stat_result = os.stat(self.LOG_FILE)
-                if not stat_result.st_uid == pwd.getpwnam(self.USER).pw_uid:
+                if pwd and not stat_result.st_uid == pwd.getpwnam(self.USER).pw_uid:
                     error_exit(f"{msg_prefix} User {self.USER} is not owner of logfile '{self.LOG_FILE}'.")
                 if grp and not stat_result.st_gid == grp.getgrnam(self.GROUP).gr_gid:
                     error_exit(f"{msg_prefix} Group {self.GROUP} is not owner of logfile '{self.LOG_FILE}'.")
